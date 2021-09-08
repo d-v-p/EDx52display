@@ -30,6 +30,7 @@ const (
 type Journalstate struct {
 	Location
 	EDSMTarget
+	Commander
 }
 
 // Location indicates the players current location in the game
@@ -53,6 +54,13 @@ type EDSMTarget struct {
 	SystemAddress int64
 }
 
+// Commander info
+type Commander struct {
+	Name string
+	Ship string
+	Credits int64
+}
+
 const (
 	systemaddress = "SystemAddress"
 	bodyid        = "BodyID"
@@ -66,6 +74,9 @@ const (
 	latitude      = "Latitude"
 	longitude     = "Longitude"
 	name          = "Name"
+	commander     = "Commander"
+	credits       = "Credits"
+	ship          = "Ship_Localised"
 )
 
 var state = Journalstate{}
@@ -152,6 +163,9 @@ func ParseJournalLine(line []byte) Journalstate {
 	case "ApproachSettlement":
 		eApproachSettlement(p)
 		break
+	case "LoadGame":
+		eLoadGame(p)
+		break
 	}
 	return state
 }
@@ -224,4 +238,10 @@ func eApproachSettlement(p parser) {
 	state.Location.BodyID, _ = p.getInt(bodyid)
 
 	state.Type = LocationPlanet
+}
+
+func eLoadGame(p parser) {
+	state.Commander.Name, _ = p.getString(commander)
+	state.Commander.Ship, _ = p.getString(ship)
+	state.Commander.Credits, _ = p.getInt(credits)
 }

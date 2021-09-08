@@ -14,12 +14,13 @@ import (
 	"github.com/peterbn/EDx52display/conf"
 )
 
-const DisplayPages = 3
+const DisplayPages = 4
 
 var tick time.Ticker
 
 const (
-	pageCargo = iota
+	pageCommander = iota
+	pageCargo
 	pageLocation
 	pageTargetInfo
 )

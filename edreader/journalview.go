@@ -2,6 +2,7 @@ package edreader
 
 import (
 	"log"
+	"math"
 	"sort"
 	"strings"
 
@@ -17,6 +18,28 @@ func RefreshDisplay() {
 	renderLocationPage(&Mfd.Pages[pageLocation])
 	Mfd.Pages[pageTargetInfo] = mfd.NewPage()
 	renderFSDTarget(&Mfd.Pages[pageTargetInfo])
+	Mfd.Pages[pageCommander] = mfd.NewPage()
+	renderCommanderPage(&Mfd.Pages[pageCommander])
+}
+
+func centerHeader(hdr string) string {
+	lineLen := 12
+	hdrLen := len(hdr)
+	spaceTotal := lineLen - hdrLen
+	spaceLeft := 0
+	spaceRight := 0
+	if spaceTotal > 0 {
+		spaceLeft = int(math.Floor(float64(spaceTotal)/2))
+		spaceRight = int(math.Ceil(float64(spaceTotal)/2))
+	}
+
+	return "# " + strings.Repeat(" ", spaceLeft) + hdr + strings.Repeat(" ", spaceRight) + " #"
+}
+
+func renderCommanderPage(page *mfd.Page)  {
+	page.Add(centerHeader(state.Commander.Name))
+	page.Add(state.Commander.Ship)
+	page.Add("%d", state.Commander.Credits)
 }
 
 func renderLocationPage(page *mfd.Page) {
